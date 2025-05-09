@@ -29,21 +29,6 @@
 			path = numbers_game;
 			sourceTree = "<group>";
 		};
-		D2C36F262DCC904F0088CB64 /* Services */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Services;
-			sourceTree = "<group>";
-		};
-		D2C36F312DCCA06C0088CB64 /* Constants */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Constants;
-			sourceTree = "<group>";
-		};
-		D2C36FD82DCDF8C30088CB64 /* Fonts */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Fonts;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,9 +47,6 @@
 			children = (
 				D2C36EE52DCC8C450088CB64 /* numbers_game */,
 				D2C36EE42DCC8C450088CB64 /* Products */,
-				D2C36F262DCC904F0088CB64 /* Services */,
-				D2C36F312DCCA06C0088CB64 /* Constants */,
-				D2C36FD82DCDF8C30088CB64 /* Fonts */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,9 +75,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				D2C36EE52DCC8C450088CB64 /* numbers_game */,
-				D2C36F262DCC904F0088CB64 /* Services */,
-				D2C36F312DCCA06C0088CB64 /* Constants */,
-				D2C36FD82DCDF8C30088CB64 /* Fonts */,
 			);
 			name = numbers_game;
 			packageProductDependencies = (

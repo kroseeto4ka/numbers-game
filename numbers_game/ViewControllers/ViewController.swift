@@ -97,7 +97,7 @@ extension ViewController {
         resultField.placeholder = "Введите ответ..."
         resultField.borderStyle = .roundedRect
         resultField.textAlignment = .center
-        resultField.keyboardType = .
+        resultField.keyboardType = .numbersAndPunctuation
     }
     
     func setupWrongLabel() {
