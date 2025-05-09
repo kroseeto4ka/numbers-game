@@ -2,6 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Quicksand-VariableFont_wght.ttf</string>
+		<string>Underdog-Regular.ttf</string>
+		<string>Tagesschrift-Regular.ttf</string>
+		<string>DancingScript-VariableFont_wght.ttf</string>
+		<string>CoralPixels-Regular.ttf</string>
+		<string>ComicRelief-Regular.ttf</string>
+		<string>pricedown bl.otf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

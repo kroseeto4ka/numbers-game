@@ -53,7 +53,7 @@ extension ViewController {
         horizontalStack.axis = .horizontal
         horizontalStack.alignment = .center
         horizontalStack.distribution = .fillEqually
-        horizontalStack.spacing = 30
+        horizontalStack.spacing = 0
         
         setupFirstNumberLabel()
         setupOperationLabel()
@@ -67,28 +67,28 @@ extension ViewController {
     func setupFirstNumberLabel() {
         firstNumberLabel.text = manager.getFirstNumber()
         firstNumberLabel.textColor = .black
-        firstNumberLabel.font = .systemFont(ofSize: 30)
+        firstNumberLabel.font = createRandomCustomFont(50)
         firstNumberLabel.textAlignment = .center
     }
     
     func setupSecondNumberLabel() {
         secondNumberLabel.text = manager.getSecondNumber()
         secondNumberLabel.textColor = .black
-        secondNumberLabel.font = .systemFont(ofSize: 30)
+        secondNumberLabel.font = createRandomCustomFont(50)
         secondNumberLabel.textAlignment = .center
     }
     
     func setupOperationLabel() {
         operationLabel.text = manager.getOperation()
         operationLabel.textColor = .black
-        operationLabel.font = .systemFont(ofSize: 30)
+        operationLabel.font = .systemFont(ofSize: 50)
         operationLabel.textAlignment = .center
     }
     
     func setupEqualLabel() {
         equalLabel.text = "="
         equalLabel.textColor = .black
-        equalLabel.font = .systemFont(ofSize: 30)
+        equalLabel.font = .systemFont(ofSize: 50)
         equalLabel.textAlignment = .center
     }
     
@@ -97,7 +97,7 @@ extension ViewController {
         resultField.placeholder = "Введите ответ..."
         resultField.borderStyle = .roundedRect
         resultField.textAlignment = .center
-        resultField.keyboardType = .numberPad
+        resultField.keyboardType = .
     }
     
     func setupWrongLabel() {
@@ -113,6 +113,11 @@ extension ViewController {
         goButton.layer.cornerRadius = 10
     }
     
+    func createRandomCustomFont(_ size: CGFloat) -> UIFont {
+        let randomName: CustomFonts = CustomFonts.allCases.randomElement()!
+        return UIFont(name: randomName.rawValue, size: size) ?? .systemFont(ofSize: size)
+    }
+    
     func addAction() {
         let action = UIAction { _ in
             if let result = self.resultField.text {
@@ -120,7 +125,7 @@ extension ViewController {
                     self.stateLabel.isHidden = false
                     self.stateLabel.text = "Right!"
                     self.stateLabel.textColor = .green
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         self.manager.generateData()
                         self.setupView()
                     }
@@ -128,6 +133,9 @@ extension ViewController {
                     self.stateLabel.isHidden = false
                     self.stateLabel.text = "Wrong!"
                     self.stateLabel.textColor = .red
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.stateLabel.isHidden = true
+                    }
                 }
             }
         }
@@ -149,22 +157,22 @@ extension ViewController {
         
         NSLayoutConstraint.activate([
             horizontalStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            horizontalStack.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15),
-            horizontalStack.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.65),
+            horizontalStack.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.10),
+            horizontalStack.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             horizontalStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            equalLabel.topAnchor.constraint(equalTo: horizontalStack.bottomAnchor, constant: 30),
-            equalLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1),
+            equalLabel.topAnchor.constraint(equalTo: horizontalStack.bottomAnchor, constant: 20),
+            equalLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05),
             equalLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
             equalLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            stateLabel.topAnchor.constraint(equalTo: equalLabel.bottomAnchor, constant: 30),
+            stateLabel.topAnchor.constraint(equalTo: equalLabel.bottomAnchor, constant: 20),
             stateLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.04),
             stateLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
             stateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             goButton.topAnchor.constraint(equalTo: stateLabel.bottomAnchor, constant: 30),
-            goButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.04),
+            goButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.08),
             goButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
             goButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
