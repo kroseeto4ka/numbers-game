@@ -9,13 +9,15 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let horizontalStack = UIStackView()
+    let numberHorizontalStack = UIStackView()
+    let buttonHorizontalStack = UIStackView()
     let firstNumberLabel = UILabel()
     let secondNumberLabel = UILabel()
     let operationLabel = UILabel()
     let equalLabel = UILabel()
     let stateLabel = UILabel()
     let goButton = UIButton()
+    let resetButton = UIButton()
     
     let resultField = UITextField()
     
@@ -26,8 +28,6 @@ class ViewController: UIViewController {
         setupView()
         setupLayout()
     }
-
-
 }
 
 //MARK: - Setup View
@@ -35,46 +35,59 @@ extension ViewController {
     func setupView() {
         view.backgroundColor = .systemGray4
         
-        setupHorizontalStack()
+        setupNumberStack()
+        setupButtonStack()
         setupEqualLabel()
         setupWrongLabel()
-        setupGoButton()
         setupResultField()
         addAction()
         
-        view.addSubview(horizontalStack)
+        view.addSubview(numberHorizontalStack)
         view.addSubview(equalLabel)
+        view.addSubview(buttonHorizontalStack)
         view.addSubview(stateLabel)
-        view.addSubview(goButton)
         view.addSubview(resultField)
     }
     
-    func setupHorizontalStack() {
-        horizontalStack.axis = .horizontal
-        horizontalStack.alignment = .center
-        horizontalStack.distribution = .fillEqually
-        horizontalStack.spacing = 0
+    func setupNumberStack() {
+        numberHorizontalStack.axis = .horizontal
+        numberHorizontalStack.alignment = .center
+        numberHorizontalStack.distribution = .fillEqually
+        numberHorizontalStack.spacing = 0
         
         setupFirstNumberLabel()
         setupOperationLabel()
         setupSecondNumberLabel()
         
-        horizontalStack.addArrangedSubview(firstNumberLabel)
-        horizontalStack.addArrangedSubview(operationLabel)
-        horizontalStack.addArrangedSubview(secondNumberLabel)
+        numberHorizontalStack.addArrangedSubview(firstNumberLabel)
+        numberHorizontalStack.addArrangedSubview(operationLabel)
+        numberHorizontalStack.addArrangedSubview(secondNumberLabel)
+    }
+    
+    func setupButtonStack() {
+        buttonHorizontalStack.axis = .horizontal
+        buttonHorizontalStack.alignment = .center
+        buttonHorizontalStack.distribution = .fillEqually
+        buttonHorizontalStack.spacing = 10
+        
+        setupGoButton()
+        setupResetButton()
+        
+        buttonHorizontalStack.addArrangedSubview(goButton)
+        buttonHorizontalStack.addArrangedSubview(resetButton)
     }
     
     func setupFirstNumberLabel() {
         firstNumberLabel.text = manager.getFirstNumber()
-        firstNumberLabel.textColor = .black
-        firstNumberLabel.font = createRandomCustomFont(50)
+        firstNumberLabel.textColor = UIColor.getRandomPastelColor()
+        firstNumberLabel.font = UIFont.getRandomCustomFont(50)
         firstNumberLabel.textAlignment = .center
     }
     
     func setupSecondNumberLabel() {
         secondNumberLabel.text = manager.getSecondNumber()
-        secondNumberLabel.textColor = .black
-        secondNumberLabel.font = createRandomCustomFont(50)
+        secondNumberLabel.textColor = UIColor.getRandomPastelColor()
+        secondNumberLabel.font = UIFont.getRandomCustomFont(50)
         secondNumberLabel.textAlignment = .center
     }
     
@@ -113,13 +126,15 @@ extension ViewController {
         goButton.layer.cornerRadius = 10
     }
     
-    func createRandomCustomFont(_ size: CGFloat) -> UIFont {
-        let randomName: CustomFonts = CustomFonts.allCases.randomElement()!
-        return UIFont(name: randomName.rawValue, size: size) ?? .systemFont(ofSize: size)
+    func setupResetButton() {
+        resetButton.setTitle("Reset", for: .normal)
+        resetButton.tintColor = .black
+        resetButton.backgroundColor = .systemRed
+        resetButton.layer.cornerRadius = 10
     }
     
     func addAction() {
-        let action = UIAction { _ in
+        let goAction = UIAction { _ in
             if let result = self.resultField.text {
                 if self.manager.checkAnswer(Int(result) ?? 0) {
                     self.stateLabel.isHidden = false
@@ -139,14 +154,21 @@ extension ViewController {
                 }
             }
         }
-        goButton.addAction(action, for: .touchUpInside)
+        let resetAction = UIAction { _ in
+            self.manager.generateData()
+            self.setupView()
+        }
+        
+        goButton.addAction(goAction, for: .touchUpInside)
+        resetButton.addAction(resetAction, for: .touchUpInside)
     }
 }
 
 //MARK: - Setup layout
 extension ViewController {
     func setupLayout() {
-        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        numberHorizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        buttonHorizontalStack.translatesAutoresizingMaskIntoConstraints = false
         firstNumberLabel.translatesAutoresizingMaskIntoConstraints = false
         operationLabel.translatesAutoresizingMaskIntoConstraints = false
         secondNumberLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -154,14 +176,15 @@ extension ViewController {
         resultField.translatesAutoresizingMaskIntoConstraints = false
         stateLabel.translatesAutoresizingMaskIntoConstraints = false
         goButton.translatesAutoresizingMaskIntoConstraints = false
+        resetButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            horizontalStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            horizontalStack.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.10),
-            horizontalStack.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            horizontalStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            numberHorizontalStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            numberHorizontalStack.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.10),
+            numberHorizontalStack.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            numberHorizontalStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            equalLabel.topAnchor.constraint(equalTo: horizontalStack.bottomAnchor, constant: 20),
+            equalLabel.topAnchor.constraint(equalTo: numberHorizontalStack.bottomAnchor, constant: 20),
             equalLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05),
             equalLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
             equalLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -171,12 +194,12 @@ extension ViewController {
             stateLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
             stateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            goButton.topAnchor.constraint(equalTo: stateLabel.bottomAnchor, constant: 30),
-            goButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.08),
-            goButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
-            goButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonHorizontalStack.topAnchor.constraint(equalTo: stateLabel.bottomAnchor, constant: 30),
+            buttonHorizontalStack.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.08),
+            buttonHorizontalStack.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            buttonHorizontalStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            resultField.topAnchor.constraint(equalTo: goButton.bottomAnchor, constant: 20),
+            resultField.topAnchor.constraint(equalTo: buttonHorizontalStack.bottomAnchor, constant: 20),
             resultField.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05),
             resultField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.65),
             resultField.centerXAnchor.constraint(equalTo: view.centerXAnchor)
