@@ -38,7 +38,7 @@ extension ViewController {
         setupNumberStack()
         setupButtonStack()
         setupEqualLabel()
-        setupWrongLabel()
+        setupStateLabel()
         setupResultField()
         addAction()
         
@@ -113,7 +113,7 @@ extension ViewController {
         resultField.keyboardType = .numbersAndPunctuation
     }
     
-    func setupWrongLabel() {
+    func setupStateLabel() {
         stateLabel.font = .boldSystemFont(ofSize: 30)
         stateLabel.textAlignment = .center
         stateLabel.isHidden = true
@@ -133,6 +133,24 @@ extension ViewController {
         resetButton.layer.cornerRadius = 10
     }
     
+    func updateViewAfterReset() {
+        firstNumberLabel.text = manager.getFirstNumber()
+        firstNumberLabel.textColor = UIColor.getRandomPastelColor()
+        firstNumberLabel.font = UIFont.getRandomCustomFont(50)
+        
+        secondNumberLabel.text = manager.getSecondNumber()
+        secondNumberLabel.textColor = UIColor.getRandomPastelColor()
+        secondNumberLabel.font = UIFont.getRandomCustomFont(50)
+        
+        operationLabel.text = manager.getOperation()
+        operationLabel.textColor = .black
+        operationLabel.font = .systemFont(ofSize: 50)
+        
+        resultField.text = nil
+        
+        stateLabel.isHidden = true
+    }
+    
     func addAction() {
         let goAction = UIAction { _ in
             if let result = self.resultField.text {
@@ -142,7 +160,7 @@ extension ViewController {
                     self.stateLabel.textColor = .green
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         self.manager.generateData()
-                        self.setupView()
+                        self.updateViewAfterReset()
                     }
                 } else {
                     self.stateLabel.isHidden = false
@@ -156,7 +174,7 @@ extension ViewController {
         }
         let resetAction = UIAction { _ in
             self.manager.generateData()
-            self.setupView()
+            self.updateViewAfterReset()
         }
         
         goButton.addAction(goAction, for: .touchUpInside)
