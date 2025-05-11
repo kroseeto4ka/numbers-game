@@ -4,8 +4,6 @@
 //
 //  Created by Никита Сорочинский on 5/8/25.
 //
-import Foundation
-
 class NumberManager {
     var model: NumberModel = NumberModel()
     var action: (() -> ())?
@@ -49,9 +47,18 @@ class NumberManager {
         return "ERROR"
     }
     
+    func getHighscore() -> Int {
+        if let highScore = model.highScore {
+            return highScore
+        }
+        
+        return 0
+    }
+    
     func generateData() {
         self.model.operation = Operation.allCases.randomElement()!
         self.model.secondNumber = Int.random(in: 1...100)
+        
         if self.model.operation == .division {
             self.model.firstNumber = self.model.secondNumber! * Int.random(in: 1...10)
         } else {
@@ -59,6 +66,15 @@ class NumberManager {
         }
     }
     
+    func resetHighScore() {
+        self.model.highScore = 0
+    }
     
-    
+    func increaseHighScore() {
+        if let highScore = model.highScore {
+            model.highScore! += 1
+        } else {
+            model.highScore = 1
+        }
+    }
 }
