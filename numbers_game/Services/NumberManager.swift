@@ -4,11 +4,15 @@
 //
 //  Created by Никита Сорочинский on 5/8/25.
 //
+import Foundation
+
 class NumberManager {
     var model: NumberModel = NumberModel()
+    var userDefaults = UserDefaults.standard
     
     init() {
         self.generateData()
+        model.record = userDefaults.integer(forKey: UserDefaultKeys.userRecord)
     }
     
     func checkAnswer(_ userResult: Int) -> Bool {
@@ -85,6 +89,7 @@ class NumberManager {
         if let highScore = highScore {
             if highScore > model.record ?? 0 {
                 model.record = model.highScore!
+                userDefaults.set(model.record, forKey: UserDefaultKeys.userRecord)
             }
         }
     }
