@@ -11,18 +11,20 @@ class ViewController: UIViewController {
     
     let numberHorizontalStack = UIStackView()
     let buttonHorizontalStack = UIStackView()
+    let scoresHorizontalStack = UIStackView()
     let firstNumberLabel = UILabel()
     let secondNumberLabel = UILabel()
     let operationLabel = UILabel()
     let equalLabel = UILabel()
     let stateLabel = UILabel()
+    let recordLabel = UILabel()
     let goButton = UIButton()
     let resetButton = UIButton()
     let highscoreLabel = UILabel()
     
     let resultField = UITextField()
     
-    var manager = NumberManager()
+    let manager = NumberManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,15 +38,15 @@ extension ViewController {
     func setupView() {
         view.backgroundColor = .systemGray4
         
-        setupHighScoreLabel()
+        setupScoreStack()
         setupNumberStack()
         setupButtonStack()
         setupEqualLabel()
-        setupStateLabel()
         setupResultField()
+        setupStateLabel()
         addAction()
         
-        view.addSubview(highscoreLabel)
+        view.addSubview(scoresHorizontalStack)
         view.addSubview(numberHorizontalStack)
         view.addSubview(equalLabel)
         view.addSubview(buttonHorizontalStack)
@@ -53,7 +55,7 @@ extension ViewController {
     }
     
     func setupHighScoreLabel() {
-        highscoreLabel.text = "Stack: \(manager.getHighscore())"
+        highscoreLabel.text = "\(Texts.stack)\(manager.getHighscore())"
         highscoreLabel.textColor = .black
         highscoreLabel.font = .systemFont(ofSize: 20)
         highscoreLabel.textAlignment = .center
@@ -72,6 +74,19 @@ extension ViewController {
         numberHorizontalStack.addArrangedSubview(firstNumberLabel)
         numberHorizontalStack.addArrangedSubview(operationLabel)
         numberHorizontalStack.addArrangedSubview(secondNumberLabel)
+    }
+    
+    func setupScoreStack() {
+        scoresHorizontalStack.axis = .horizontal
+        scoresHorizontalStack.alignment = .center
+        scoresHorizontalStack.distribution = .fillEqually
+        scoresHorizontalStack.spacing = 0
+        
+        setupHighScoreLabel()
+        setupRecordLabel()
+        
+        scoresHorizontalStack.addArrangedSubview(highscoreLabel)
+        scoresHorizontalStack.addArrangedSubview(recordLabel)
     }
     
     func setupButtonStack() {
@@ -117,7 +132,7 @@ extension ViewController {
     
     func setupResultField() {
         resultField.text = nil
-        resultField.placeholder = "Введите ответ..."
+        resultField.placeholder = Texts.inputTextholder
         resultField.borderStyle = .roundedRect
         resultField.textAlignment = .center
         resultField.keyboardType = .numbersAndPunctuation
@@ -129,22 +144,31 @@ extension ViewController {
         stateLabel.isHidden = true
     }
     
+    func setupRecordLabel() {
+        recordLabel.text = "\(Texts.record)\(manager.getRecord())"
+        recordLabel.textColor = .black
+        recordLabel.font = .systemFont(ofSize: 20)
+        recordLabel.textAlignment = .center
+    }
+    
     func setupGoButton() {
-        goButton.setTitle("Go!", for: .normal)
+        goButton.setTitle(Texts.goButton, for: .normal)
         goButton.tintColor = .black
         goButton.backgroundColor = .systemGreen
         goButton.layer.cornerRadius = 10
     }
     
     func setupResetButton() {
-        resetButton.setTitle("Reset", for: .normal)
+        resetButton.setTitle(Texts.resetButton, for: .normal)
         resetButton.tintColor = .black
         resetButton.backgroundColor = .systemRed
         resetButton.layer.cornerRadius = 10
     }
     
     func updateViewAfterReset() {
-        highscoreLabel.text = "Stack: \(manager.getHighscore())"
+        highscoreLabel.text = "\(Texts.stack)\(manager.getHighscore())"
+        
+        recordLabel.text = "\(Texts.record)\(manager.getRecord())"
         
         firstNumberLabel.text = manager.getFirstNumber()
         firstNumberLabel.textColor = UIColor.getRandomPastelColor()
@@ -163,30 +187,35 @@ extension ViewController {
         stateLabel.isHidden = true
     }
     
-    func addAction() {
-        let goAction = UIAction { _ in
-            if let result = self.resultField.text {
-                if self.manager.checkAnswer(Int(result) ?? 0) {
-                    self.stateLabel.isHidden = false
-                    self.stateLabel.text = "Right!"
-                    self.stateLabel.textColor = .green
-                    self.manager.increaseHighScore()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        self.manager.generateData()
-                        self.updateViewAfterReset()
-                    }
-                } else {
-                    self.stateLabel.isHidden = false
-                    self.stateLabel.text = "Wrong!"
-                    self.stateLabel.textColor = .red
-                    self.manager.resetHighScore()
-                    self.highscoreLabel.text = "Stack: \(self.manager.getHighscore())"
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        self.stateLabel.isHidden = true
-                    }
+    func goActionSetup() {
+        if let result = self.resultField.text {
+            if self.manager.checkAnswer(Int(result) ?? 0) {
+                self.stateLabel.isHidden = false
+                self.stateLabel.text = Texts.right
+                self.stateLabel.textColor = .green
+                self.manager.increaseHighScore()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.manager.generateData()
+                    self.updateViewAfterReset()
+                }
+            } else {
+                self.stateLabel.isHidden = false
+                self.stateLabel.text = Texts.wrong
+                self.stateLabel.textColor = .red
+                self.manager.resetHighScore()
+                self.highscoreLabel.text = "\(Texts.stack)\(self.manager.getHighscore())"
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.stateLabel.isHidden = true
                 }
             }
         }
+    }
+    
+    func addAction() {
+        let goAction = UIAction { _ in
+            self.goActionSetup()
+        }
+        
         let resetAction = UIAction { _ in
             self.manager.generateData()
             self.manager.resetHighScore()
@@ -201,25 +230,20 @@ extension ViewController {
 //MARK: - Setup layout
 extension ViewController {
     func setupLayout() {
-        highscoreLabel.translatesAutoresizingMaskIntoConstraints = false
+        scoresHorizontalStack.translatesAutoresizingMaskIntoConstraints = false
         numberHorizontalStack.translatesAutoresizingMaskIntoConstraints = false
         buttonHorizontalStack.translatesAutoresizingMaskIntoConstraints = false
-        firstNumberLabel.translatesAutoresizingMaskIntoConstraints = false
-        operationLabel.translatesAutoresizingMaskIntoConstraints = false
-        secondNumberLabel.translatesAutoresizingMaskIntoConstraints = false
         equalLabel.translatesAutoresizingMaskIntoConstraints = false
         resultField.translatesAutoresizingMaskIntoConstraints = false
         stateLabel.translatesAutoresizingMaskIntoConstraints = false
-        goButton.translatesAutoresizingMaskIntoConstraints = false
-        resetButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            highscoreLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            highscoreLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05),
-            highscoreLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
-            highscoreLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            scoresHorizontalStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            scoresHorizontalStack.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.05),
+            scoresHorizontalStack.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7),
+            scoresHorizontalStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            numberHorizontalStack.topAnchor.constraint(equalTo: highscoreLabel.bottomAnchor, constant: 20),
+            numberHorizontalStack.topAnchor.constraint(equalTo: scoresHorizontalStack.bottomAnchor, constant: 20),
             numberHorizontalStack.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.10),
             numberHorizontalStack.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             numberHorizontalStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),

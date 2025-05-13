@@ -6,7 +6,6 @@
 //
 class NumberManager {
     var model: NumberModel = NumberModel()
-    var action: (() -> ())?
     
     init() {
         self.generateData()
@@ -48,11 +47,13 @@ class NumberManager {
     }
     
     func getHighscore() -> Int {
-        if let highScore = model.highScore {
-            return highScore
-        }
-        
-        return 0
+        guard let highScore = model.highScore else { return 0 }
+        return highScore
+    }
+    
+    func getRecord() -> Int {
+        guard let record = model.record else { return 0 }
+        return record
     }
     
     func generateData() {
@@ -73,8 +74,18 @@ class NumberManager {
     func increaseHighScore() {
         if let highScore = model.highScore {
             model.highScore! += 1
+            checkRecord(model.highScore)
         } else {
             model.highScore = 1
+            checkRecord(model.highScore)
+        }
+    }
+    
+    func checkRecord(_ highScore: Int?) {
+        if let highScore = highScore {
+            if highScore > model.record ?? 0 {
+                model.record = model.highScore!
+            }
         }
     }
 }

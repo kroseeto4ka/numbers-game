@@ -27,4 +27,5 @@ struct NumberModel {
         return nil
     }
     var highScore: Int?
+    var record: Int?
 }
